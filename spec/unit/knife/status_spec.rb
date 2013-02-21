@@ -24,6 +24,7 @@ describe Chef::Knife::Status do
     node = Chef::Node.new.tap do |n|
       n.automatic_attrs["fqdn"] = "foobar"
       n.automatic_attrs["ohai_time"] = 1343845969
+      n.automatic_attrs["name"] = "server-name"
     end
     query = mock("Chef::Search::Query")
     query.stub!(:search).and_yield(node)
@@ -38,6 +39,11 @@ describe Chef::Knife::Status do
       @knife.run
       @stdout.string.match(/foobar/).should_not be_nil
       @stdout.string.match(/\e.*ago/).should be_nil
+    end
+
+    it "should list node name" do
+      @knife.run
+      @stdout.string.match(/server-name/).should_not be_nil
     end
   end
 end
